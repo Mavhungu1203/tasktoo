@@ -6,52 +6,105 @@ package tasktwo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.util.Scanner;
+import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Node;
+
+
 
 public class App {
     public String getGreeting() {
         return "Hello World!";
     }
     //task1 for reading file and print out the field values 
-    public static void PrintingValues (){
-        String fileName = "C:/Users/Mavhungu Marcia/taskTwo/app/src/main/resources/data.xml";
+    // public static void PrintingValues (){
+    //     String fileName = "C:/Users/Mavhungu Marcia/taskTwo/app/src/main/resources/data.xml";
         
+    //     try {
+    //         File file = new File(fileName);
+    //         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+    //         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+    //         Document doc = dBuilder.parse(file);
+
+    //         doc.getDocumentElement().normalize();
+    //         NodeList recordList = doc.getElementsByTagName("record");
+
+    //         for (int i = 0; i < recordList.getLength(); i++) {
+    //             Element recordElement = (Element) recordList.item(i);
+    //             String name = recordElement.getElementsByTagName("name").item(0).getTextContent();
+    //             String postalZip = recordElement.getElementsByTagName("postalZip").item(0).getTextContent();
+    //             String region = recordElement.getElementsByTagName("region").item(0).getTextContent();
+    //             String country = recordElement.getElementsByTagName("country").item(0).getTextContent();
+    //             String address = recordElement.getElementsByTagName("address").item(0).getTextContent();
+    //             String list = recordElement.getElementsByTagName("list").item(0).getTextContent();
+
+    //             System.out.println("Name: " + name);
+    //             System.out.println("Postal Zip: " + postalZip);
+    //             System.out.println("Region: " + region);
+    //             System.out.println("Country: " + country);
+    //             System.out.println("Address: " + address);
+    //             System.out.println("List: " + list);
+    //             System.out.println("-----");
+    //         }
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+    public static void UserSelectedfield(){
         try {
-            File file = new File(fileName);
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(file);
+            // Load XML file
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse("C:/Users/Mavhungu Marcia/taskTwo/app/src/main/resources/data.xml"); // Replace with the path to your XML file
 
-            doc.getDocumentElement().normalize();
-            NodeList recordList = doc.getElementsByTagName("record");
+            // Get user input for fields to display
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter comma-separated field names to display: ");
+            if (scanner.hasNextLine()) {
+                String input = scanner.nextLine();
+                String[] fields = input.split(",");
 
-            for (int i = 0; i < recordList.getLength(); i++) {
-                Element recordElement = (Element) recordList.item(i);
-                String name = recordElement.getElementsByTagName("name").item(0).getTextContent();
-                String postalZip = recordElement.getElementsByTagName("postalZip").item(0).getTextContent();
-                String region = recordElement.getElementsByTagName("region").item(0).getTextContent();
-                String country = recordElement.getElementsByTagName("country").item(0).getTextContent();
-                String address = recordElement.getElementsByTagName("address").item(0).getTextContent();
-                String list = recordElement.getElementsByTagName("list").item(0).getTextContent();
+                // Loop through the record element
+                NodeList recordList = doc.getElementsByTagName("record");
+                for (int i = 0; i < recordList.getLength(); i++) {
+                    Element recordElement = (Element) recordList.item(i);
 
-                System.out.println("Name: " + name);
-                System.out.println("Postal Zip: " + postalZip);
-                System.out.println("Region: " + region);
-                System.out.println("Country: " + country);
-                System.out.println("Address: " + address);
-                System.out.println("List: " + list);
-                System.out.println("-----");
+                    // Loop through the selected fields and display their values
+                    for (String field : fields) {
+                        field = field.trim();
+                        NodeList fieldList = recordElement.getElementsByTagName(field);
+                        if (fieldList.getLength() > 0) {
+                            Element fieldElement = (Element) fieldList.item(0);
+                            System.out.println(field + ": " + fieldElement.getTextContent());
+                        } else {
+                            System.out.println(field + ": Not found");
+                        }
+                    }
+                }
+            } else {
+                System.out.println("No input provided. Exiting...");
             }
+
+            scanner.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+
+
+
+
+
+
+
     public static void main(String[] args) {
         System.out.println(new App().getGreeting());
-        App.PrintingValues();    // calling printing values method (task2 , 1)
+        //App.PrintingValues();    // calling printing values method (task2 , 1)
+        App.UserSelectedfield(); // calling user selected field method (task2 , 2)
     }    
 }
