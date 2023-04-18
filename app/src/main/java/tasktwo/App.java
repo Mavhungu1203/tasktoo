@@ -96,7 +96,58 @@ public class App {
     //     }
     // }
 
-    public static void JasonFormat() {
+    // public static void JasonFormat() {
+    //     try {
+    //         // Load XML file
+    //         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    //         DocumentBuilder builder = factory.newDocumentBuilder();
+    //         Document doc = builder.parse("C:/Users/Mavhungu Marcia/taskTwo/app/src/main/resources/data.xml"); // Replace with the path to your XML file
+
+    //         // Get user input for fields to display
+    //         Scanner scanner = new Scanner(System.in);
+    //         System.out.println("Enter comma-separated field names to display: ");
+    //         if (scanner.hasNextLine()) {
+    //             String input = scanner.nextLine();
+    //             String[] fields = input.split(",");
+
+    //             JSONArray recordsArray = new JSONArray();
+    //             // Loop through the record element
+    //             NodeList recordList = doc.getElementsByTagName("record");
+    //             for (int i = 0; i < recordList.getLength(); i++) {
+    //                 Element recordElement = (Element) recordList.item(i);
+    //                 JSONObject recordObject = new JSONObject();
+
+    //                 // Loop through the selected fields and add them to the recordObject
+    //                 for (String field : fields) {
+    //                     field = field.trim();
+    //                     NodeList fieldList = recordElement.getElementsByTagName(field);
+    //                     if (fieldList.getLength() > 0) {
+    //                         Element fieldElement = (Element) fieldList.item(0);
+    //                         String fieldValue = fieldElement.getTextContent();
+    //                         recordObject.put(field, fieldValue);
+    //                     } else {
+    //                         recordObject.put(field, "Not found");
+    //                     }
+    //                 }
+
+    //                 recordsArray.put(recordObject);
+    //             }
+
+    //             JSONObject outputObject = new JSONObject();
+    //             outputObject.put("records", recordsArray);
+
+    //             System.out.println(outputObject.toString(4)); // Output JSON with 4-space indentation
+    //         } else {
+    //             System.out.println("No input provided. Exiting...");
+    //         }
+
+    //         scanner.close();
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
+    public static void Validation(){
         try {
             // Load XML file
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -110,43 +161,41 @@ public class App {
                 String input = scanner.nextLine();
                 String[] fields = input.split(",");
 
-                JSONArray recordsArray = new JSONArray();
-                // Loop through the record element
+                // Create an array of JSON objects
+                JSONArray jsonRecords = new JSONArray();
+
+                // Loop through the record elements
                 NodeList recordList = doc.getElementsByTagName("record");
                 for (int i = 0; i < recordList.getLength(); i++) {
                     Element recordElement = (Element) recordList.item(i);
-                    JSONObject recordObject = new JSONObject();
+                    JSONObject jsonRecord = new JSONObject();
 
-                    // Loop through the selected fields and add them to the recordObject
+                    // Loop through the selected fields and add them to the JSON object
                     for (String field : fields) {
                         field = field.trim();
                         NodeList fieldList = recordElement.getElementsByTagName(field);
                         if (fieldList.getLength() > 0) {
                             Element fieldElement = (Element) fieldList.item(0);
                             String fieldValue = fieldElement.getTextContent();
-                            recordObject.put(field, fieldValue);
+                            jsonRecord.put(field, fieldValue);
                         } else {
-                            recordObject.put(field, "Not found");
+                            System.out.println("Field '" + field + "' not found in the XML file.");
+                            jsonRecord.put(field, ""); // Add empty value if field not found
                         }
                     }
 
-                    recordsArray.put(recordObject);
+                    // Add the JSON object to the array
+                    jsonRecords.put(jsonRecord);
                 }
 
-                JSONObject outputObject = new JSONObject();
-                outputObject.put("records", recordsArray);
-
-                System.out.println(outputObject.toString(4)); // Output JSON with 4-space indentation
-            } else {
-                System.out.println("No input provided. Exiting...");
+                // Output the JSON array
+                System.out.println(jsonRecords.toString());
             }
 
-            scanner.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("An error occurred: " + e.getMessage());
         }
     }
-
     
 
 
@@ -158,6 +207,7 @@ public class App {
         System.out.println(new App().getGreeting());
         //App.PrintingValues();    // calling printing values method (task2 , 1)
         //App.UserSelectedfield(); // calling user selected field method (task2 , 2)
-        App.JasonFormat();       // calling jason format method (task2 , 3)
+        //App.JasonFormat();       // calling jason format method (task2 , 3)
+        App.Validation();        // calling validation method (task2 , 4)
     }    
 }
