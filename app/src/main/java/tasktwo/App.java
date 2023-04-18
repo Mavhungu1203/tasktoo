@@ -13,7 +13,8 @@ import java.util.Scanner;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Node;
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 
 public class App {
@@ -54,7 +55,48 @@ public class App {
     //         e.printStackTrace();
     //     }
     // }
-    public static void UserSelectedfield(){
+    // public static void UserSelectedfield(){
+    //     try {
+    //         // Load XML file
+    //         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    //         DocumentBuilder builder = factory.newDocumentBuilder();
+    //         Document doc = builder.parse("C:/Users/Mavhungu Marcia/taskTwo/app/src/main/resources/data.xml"); // Replace with the path to your XML file
+
+    //         // Get user input for fields to display
+    //         Scanner scanner = new Scanner(System.in);
+    //         System.out.println("Enter comma-separated field names to display: ");
+    //         if (scanner.hasNextLine()) {
+    //             String input = scanner.nextLine();
+    //             String[] fields = input.split(",");
+
+    //             // Loop through the record element
+    //             NodeList recordList = doc.getElementsByTagName("record");
+    //             for (int i = 0; i < recordList.getLength(); i++) {
+    //                 Element recordElement = (Element) recordList.item(i);
+
+    //                 // Loop through the selected fields and display their values
+    //                 for (String field : fields) {
+    //                     field = field.trim();
+    //                     NodeList fieldList = recordElement.getElementsByTagName(field);
+    //                     if (fieldList.getLength() > 0) {
+    //                         Element fieldElement = (Element) fieldList.item(0);
+    //                         System.out.println(field + ": " + fieldElement.getTextContent());
+    //                     } else {
+    //                         System.out.println(field + ": Not found");
+    //                     }
+    //                 }
+    //             }
+    //         } else {
+    //             System.out.println("No input provided. Exiting...");
+    //         }
+
+    //         scanner.close();
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
+    public static void JasonFormat() {
         try {
             // Load XML file
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -68,23 +110,33 @@ public class App {
                 String input = scanner.nextLine();
                 String[] fields = input.split(",");
 
+                JSONArray recordsArray = new JSONArray();
                 // Loop through the record element
                 NodeList recordList = doc.getElementsByTagName("record");
                 for (int i = 0; i < recordList.getLength(); i++) {
                     Element recordElement = (Element) recordList.item(i);
+                    JSONObject recordObject = new JSONObject();
 
-                    // Loop through the selected fields and display their values
+                    // Loop through the selected fields and add them to the recordObject
                     for (String field : fields) {
                         field = field.trim();
                         NodeList fieldList = recordElement.getElementsByTagName(field);
                         if (fieldList.getLength() > 0) {
                             Element fieldElement = (Element) fieldList.item(0);
-                            System.out.println(field + ": " + fieldElement.getTextContent());
+                            String fieldValue = fieldElement.getTextContent();
+                            recordObject.put(field, fieldValue);
                         } else {
-                            System.out.println(field + ": Not found");
+                            recordObject.put(field, "Not found");
                         }
                     }
+
+                    recordsArray.put(recordObject);
                 }
+
+                JSONObject outputObject = new JSONObject();
+                outputObject.put("records", recordsArray);
+
+                System.out.println(outputObject.toString(4)); // Output JSON with 4-space indentation
             } else {
                 System.out.println("No input provided. Exiting...");
             }
@@ -95,7 +147,7 @@ public class App {
         }
     }
 
-
+    
 
 
 
@@ -105,6 +157,7 @@ public class App {
     public static void main(String[] args) {
         System.out.println(new App().getGreeting());
         //App.PrintingValues();    // calling printing values method (task2 , 1)
-        App.UserSelectedfield(); // calling user selected field method (task2 , 2)
+        //App.UserSelectedfield(); // calling user selected field method (task2 , 2)
+        App.JasonFormat();       // calling jason format method (task2 , 3)
     }    
 }
