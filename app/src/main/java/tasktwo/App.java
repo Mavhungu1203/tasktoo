@@ -10,14 +10,15 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+
 public class App {
     public String getGreeting() {
         return "Hello World!";
     }
-
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
-        String fileName = "app/src/main/resources/data.xml";
+    //task1 for reading file and print out the field values 
+    public static void PrintingValues (){
+        String fileName = "C:/Users/Mavhungu Marcia/taskTwo/app/src/main/resources/data.xml";
+        
         try {
             File file = new File(fileName);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -48,5 +49,9 @@ public class App {
             e.printStackTrace();
         }
     }
-} 
 
+    public static void main(String[] args) {
+        System.out.println(new App().getGreeting());
+        App.PrintingValues();    // calling printing values method (task2 , 1)
+    }    
+}
